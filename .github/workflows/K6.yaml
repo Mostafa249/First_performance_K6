@@ -1,20 +1,23 @@
-name: Performance Test
+name: Performance Tests
 
 on:
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
-  performance-test:
+  performance:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-      
-    - name: Install dependencies
-      run: npm install
-      
-    - name: Run k6 tests
-      run: k6 run performance_test.js
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install k6
+        run: |
+          curl -sS https://dl.k6.io/install.sh | bash
+          sudo mv k6 /usr/local/bin/
+
+      - name: Run k6 tests
+        run: |
+          k6 run --out json=result.json path/to/performance_test.js
